@@ -1,0 +1,36 @@
+
+<h3 style="margin-left: 46%; margin-top: 2%;">Result</h3>
+
+<form style="margin-left: 40%;  margin-top: 3%;">
+    <div class="form-group row">
+      <label for="name" class="col-sm-2 col-form-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="name" value="<%=stu.name%>">
+      </div>
+    </div>
+    
+    
+    
+    <div class="form-group row">
+      <label for="rollno" class="col-sm-2 col-form-label">RollNo</label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="rollno" value="<%=stu.rollno%>">
+      </div>
+    </div>
+    
+    <div class="form-group row">
+      <label for="dob" class="col-sm-2 col-form-label">Date</label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="dob" value="<%=stu.dob.toISOString().substring(0,10)%>">
+      </div>
+    </div>
+    
+    
+    <div class="form-group row">
+      <label for="score" class="col-sm-2 col-form-label">Score</label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="score" value="<%=stu.score%>">
+      </div>
+    </div>
+    
+  </form>

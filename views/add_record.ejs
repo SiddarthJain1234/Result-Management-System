@@ -1,0 +1,107 @@
+<style>
+  .colored-background {
+      background-color: #e1eddb;
+    }
+  
+    .center{
+        margin-left: 40%;
+        margin-right: 50%;
+    } 
+    .buttons{
+        padding-left: 19px;
+        padding-right: 19px;
+    } 
+  </style>
+  
+  
+ 
+  <% if(edit=='true') {%>
+    <h3 style="margin-left: 40%; margin-top: 2%;">Edit <%=st.name%>'s Record</h3>
+    <form style="margin-left: 8%; margin-right: 8%; margin-top: 3%;" action="/teacher/editstudent" method="post">
+    <div class="form-group row">
+      <label for="name"  class="col-sm-2 col-form-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" value="<%=st.name%>" name="name" class="form-control" id="name" required>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="rollno" class="col-sm-2 col-form-label">Roll Number</label>
+      <div class="col-sm-10">
+        <input type="text" value="<%=st.rollno%>" class="form-control" id="rollno" name="rollno" required>
+      </div>
+    </div>
+    
+    <div class="form-group row">
+      <label for="dob" class="col-sm-2 col-form-label">Date of Birth</label>
+      <div class="col-sm-10">
+        <input type="date" value="<%=st.dob.toISOString().substring(0,10)%>" class="form-control" id="dob" name="dob" required>
+      </div>
+    </div>
+  
+    <div class="form-group row">
+      <label for="score" class="col-sm-2 col-form-label">Score</label>
+      <div class="col-sm-10">
+        <input type="number"  value="<%=st.score%>" class="form-control" id="score" name="score" min="0" max="100" required>
+      </div>
+    </div>
+  
+  <input type="hidden" id="Id" name="Id" value="<%=st._id%>">
+    
+    
+    
+  <div class="form-group row">
+    <div style="margin-top: 3%; margin-left: 45%;" class="col-sm-10">
+      <button  type="submit" class="btn btn-primary">Submit</button>
+     
+    </div>
+  </div>
+  </form>
+  
+  <% }%>
+  
+ 
+  <% if(edit=='false') {%>
+    <h3 style="margin-left: 40%; margin-top: 2%;">Add Student Record</h3>
+  <form style="margin-left: 8%; margin-right: 8%; margin-top: 3%;" action="/teacher/createstudent" method="post">
+    <div class="form-group row">
+      <label for="name" class="col-sm-2 col-form-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" name="name" class="form-control" id="name" required>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="rollno" class="col-sm-2 col-form-label">Roll Number</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="rollno" name="rollno" required>
+      </div>
+    </div>
+    
+    <div class="form-group row">
+      <label for="dob" class="col-sm-2 col-form-label">Date of Birth</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control" id="dob" name="dob" required>
+      </div>
+    </div>
+  
+    <div class="form-group row">
+      <label for="score" class="col-sm-2 col-form-label">Score</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" id="score" name="score" min="0" max="100" required>
+      </div>
+    </div>
+  
+    <div class="form-group row">
+      <div style="margin-top: 3%; margin-left: 45%;" class="col-sm-10">
+        <button  type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="myFunction()">Reset</button>
+      </div>
+    </div>
+  </form>
+  
+  <% }%>
+  
+  <script>
+   function myFunction() {
+          document.getElementsByTagName('form')[0].reset()
+     }
+        </script>
