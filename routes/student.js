@@ -7,17 +7,12 @@ router.use(expressLayouts)
 
 
 router.get('/findresult', (req,res) => {
-   
     res.render('find_result',{loggedin:'false'});
-
-
 })
 
 
 router.post('/find',async (req,res)=>{
-    //console.log(req.body)
     const {rollno, dob}=req.body;
-     
     const st=await student.findOne({rollno:rollno});
     res.render('student_details',{stu:st ,loggedin:'false'});
 

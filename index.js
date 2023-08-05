@@ -1,28 +1,29 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const ejs = require('ejs');
 const expressLayouts = require('express-ejs-layouts')
-const teacherRoutes =require('./routes/teacher')
 const studentRoutes=require('./routes/student')
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
-// const client=require('./config/db')
+const session = require('express-session');
 const student=require('./models/student')
-app.use(cookieParser())
+const passport=require('./config/passport')
+const  teacherRoutes=require('./routes/teacher')
 
+
+
+app.use(session({
+  secret: 'false',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.session());
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }));
 
-
-
 app.use('/teacher',teacherRoutes);
-
 app.use('/student',studentRoutes);
-
-
-
-
-
 
 
 app.use(express.static('./public'))
@@ -35,22 +36,15 @@ app.set('layout extractScripts',true);
 
 
 
-app.get('/', async (req, res) => {
-
-  let flag='false';
-  if(req.cookies.admin=='true'){
-    flag='true';
-    const students=await student.find({});
-    res.render('student_list',{loggedin:flag, sts:students});
+app.get('/',async (req, res) => {
+  if (req.isAuthenticated()) {
+    res.send('you are already loggedin,logout first <a href="/teacher/logout">logout</a>');
   }
   else{
+  let flag='false';
     res.render('loginas',{loggedin:flag});
   }
 })
-
-
-
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

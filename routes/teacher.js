@@ -1,72 +1,55 @@
 const express= require('express');
 const expressLayouts = require('express-ejs-layouts')
 const router=express.Router();
+const passport=require('../config/passport')
 const student=require('../models/student')
+const initliazepassport=require('../config/passport');
 router.use(express.static('./public'))
 router.use(expressLayouts)
 
 
-router.post('/createsession',async (req,res) =>{
 
 
-    if(req.body.email=="admin@123" && req.body.pwd=="admin"){
-       
-        res.cookie('admin','true');
-        const students=await student.find({});
-       
-      res.render('student_list',{loggedin:'true',sts:students});
-    }
-   
-    else{
 
-        res.render('loginas',{loggedin:'false'});
-    }
-
+router.post('/createsession',passport.authenticate('local', { failureRedirect: 'back' }),async (req,res) =>{
+      const students=await student.find({});
+      res.render('student_list',{loggedin:'true',sts:students});    
 })
 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    // If the user is authenticated, proceed to the next middleware or route handler
+    return next();
+  } else {
+    // If the user is not authenticated, redirect them to the login page (or return an error)
+    res.redirect('back'); 
+  }
+}
 
-router.get('/addrecord',(req,res)=>{
-  if(req.cookies.admin=='true'){
+router.get('/addrecord',ensureAuthenticated,(req,res)=>{   
     let st;
     res.render('add_record',{loggedin:'true',edit:'false',st});
-  }
-  else{
-    res.redirect('back');
-  }
 })
 
-router.get('/logout',(req,res)=>{
-  if(req.cookies.admin=='true'){
-    res.clearCookie('admin');
+router.get('/logout',ensureAuthenticated,(req,res)=>{
+    res.clearCookie(Object.keys(req.cookies)[0]);
     res.render('loginas',{loggedin:'false'});
-  }
-  else{
-    res.redirect('back');
-  }
 })
 
 
 router.post('/createstudent', async (req,res)=>{
-
   try {
-    console.log(req.body.name)
     const stud =await student.create(req.body);
-
     const students=await student.find({});
-
-
-
     res.render('student_list',{loggedin:'true',sts:students});
                   
   } catch (error) {
     console.log(error)
     res.redirect('back');
-  }
-    
+  }  
 })
 
 router.get('/edit/:id',async (req,res)=>{
-  
   try {
     const {id} = req.params;  
     const st=await student.findById(id);
@@ -76,8 +59,6 @@ router.get('/edit/:id',async (req,res)=>{
     console.log(error);
     res.send(error);
   }    
-
-
 })
 
 
@@ -104,21 +85,16 @@ router.get('/delete/:id', async(req,res)=>{
 
 
 router.post('/editstudent', async(req,res)=>{
-
   try {
     const id=req.body.Id;
     delete (req.body.Id);
-    const st = await student.findByIdAndUpdate(id,req.body);
-    
+    const st = await student.findByIdAndUpdate(id,req.body);  
     if(!st){
       res.send('object not found with this id')
       return;
     }
     const students=await student.find({});
-       
       res.render('student_list',{loggedin:'true',sts:students});
-
-    
   } catch (error) {
     console.log(error);    
   }
@@ -129,16 +105,14 @@ router.post('/editstudent', async(req,res)=>{
 
 
 router.get('/login', (req, res) => {
-
-    
-    if(req.cookies.admin=='true'){
-      res.redirect('back');
-    }
-    else{
-      res.render('teacher_login',{loggedin:'false'});;
-    }
-
-    
+  if (req.isAuthenticated()) {
+    console.log('login router called')
+    res.send('you are already loggedin,logout first <a href="/teacher/logout">logout</a>');
+  }
+  else{
+    res.render('teacher_login',{loggedin:'false'});  
+  } 
 });
+
 
 module.exports= router;
